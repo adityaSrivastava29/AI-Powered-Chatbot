@@ -10,6 +10,8 @@ const Chat = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [socket, setSocket] = useState(null);
   const [sessionId, setSessionId] = useState('');
+  const [showHistory, setShowHistory] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -28,7 +30,8 @@ const Chat = () => {
     setMessages([{
       role: 'assistant',
       content: 'Hello! I\'m your AI assistant. How can I help you today?',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      status: 'delivered'
     }]);
     
     return () => {
@@ -42,7 +45,7 @@ const Chat = () => {
       
       socket.on('chatHistory', (history) => {
         if (history && history.length > 0) {
-          setMessages(history);
+          setChatHistory(history);
         }
       });
     }
@@ -59,7 +62,8 @@ const Chat = () => {
         {
           role: 'assistant',
           content: data.message,
-          timestamp: data.timestamp
+          timestamp: data.timestamp,
+          status: 'delivered'
         }
       ]);
     });
@@ -78,15 +82,14 @@ const Chat = () => {
   };
 
   const handleSendMessage = (message) => {
-    setMessages(prevMessages => [
-      ...prevMessages,
-      {
-        role: 'user',
-        content: message,
-        timestamp: new Date().toISOString()
-      }
-    ]);
-    
+    const newMessage = {
+      role: 'user',
+      content: message,
+      timestamp: new Date().toISOString(),
+      status: 'sent'
+    };
+
+    setMessages(prevMessages => [...prevMessages, newMessage]);
     setIsTyping(true);
     
     socket.emit('message', {
@@ -95,12 +98,62 @@ const Chat = () => {
     });
   };
 
+  const clearChatHistory = () => {
+    setMessages([{
+      role: 'assistant',
+      content: 'Hello! I\'m your AI assistant. How can I help you today?',
+      timestamp: new Date().toISOString(),
+      status: 'delivered'
+    }]);
+    localStorage.removeItem('chatSessionId');
+    setSessionId(uuidv4());
+  };
+
   return (
     <div className="chat-container">
       <div className="chat-header">
-        <h1><i className="fas fa-robot"></i> AI Chatbot</h1>
-        <p>Ask me anything!</p>
+        <div className="header-left">
+          <h1><i className="fas fa-robot"></i> AI Chatbot</h1>
+          <p>Ask me anything!</p>
+        </div>
+        <div className="header-right">
+          <button 
+            className="history-button"
+            onClick={() => setShowHistory(!showHistory)}
+          >
+            <i className="fas fa-history"></i> History
+          </button>
+          <button 
+            className="clear-button"
+            onClick={clearChatHistory}
+          >
+            <i className="fas fa-trash"></i> Clear
+          </button>
+        </div>
       </div>
+      
+      {showHistory && (
+        <div className="chat-history-modal">
+          <div className="history-content">
+            <h2>Chat History</h2>
+            <div className="history-messages">
+              {chatHistory.map((message, index) => (
+                <Message 
+                  key={index}
+                  message={message}
+                  isBot={message.role === 'assistant'}
+                />
+              ))}
+            </div>
+            <button 
+              className="close-button"
+              onClick={() => setShowHistory(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       
       <div className="chat-messages">
         {messages.map((message, index) => (
