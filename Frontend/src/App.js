@@ -12,7 +12,7 @@ function App() {
           <div className="feature">
             <i className="fas fa-brain"></i>
             <h3>AI Powered</h3>
-            <p>Utilizes OpenAI's advanced language models</p>
+            <p>Utilizes Gemini's advanced language models</p>
           </div>
           <div className="feature">
             <i className="fas fa-bolt"></i>

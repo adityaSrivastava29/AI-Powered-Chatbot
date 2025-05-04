@@ -40,13 +40,33 @@ const Message = ({ message, isBot }) => {
     });
   };
 
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'sent':
+        return <i className="fas fa-check"></i>;
+      case 'delivered':
+        return <i className="fas fa-check-double"></i>;
+      case 'read':
+        return <i className="fas fa-check-double" style={{ color: '#2ecc71' }}></i>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className={`message ${isBot ? 'bot-message' : 'user-message'}`}>
       <div className="message-content">
         <p>{formatMessage(message.content)}</p>
       </div>
-      <div className="message-timestamp">
-        {formatTimestamp(message.timestamp)}
+      <div className="message-footer">
+        <div className="message-timestamp">
+          {formatTimestamp(message.timestamp)}
+        </div>
+        {!isBot && message.status && (
+          <div className={`message-status ${message.status}`}>
+            {getStatusIcon(message.status)}
+          </div>
+        )}
       </div>
     </div>
   );

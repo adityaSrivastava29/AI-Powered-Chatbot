@@ -1,47 +1,70 @@
 .chat-input {
-    padding: 15px;
+    padding: 1.2rem;
     background-color: white;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  
-  .chat-input form {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.chat-input form {
     display: flex;
-    gap: 10px;
-  }
-  
-  .chat-input input {
+    gap: 12px;
+    align-items: center;
+}
+
+.chat-input input {
     flex: 1;
-    padding: 12px 15px;
+    padding: 12px 18px;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 30px;
+    border-radius: 24px;
     outline: none;
-    font-size: 1rem;
-    transition: border-color 0.2s;
-  }
-  
-  .chat-input input:focus {
-    border-color: #4fc3f7;
-  }
-  
-  .chat-input button {
-    background-color: #4a6fa5;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    background-color: #f8f9fa;
+}
+
+.chat-input input:focus {
+    border-color: #4a90e2;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.chat-input input::placeholder {
+    color: #999;
+}
+
+.chat-input button {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
     color: white;
     border: none;
     border-radius: 50%;
-    width: 45px;
-    height: 45px;
+    width: 48px;
+    height: 48px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .chat-input button:hover {
-    background-color: #166088;
-  }
-  
-  .chat-input button:disabled {
-    background-color: #cccccc;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+}
+
+.chat-input button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.chat-input button:active {
+    transform: translateY(0);
+}
+
+.chat-input button:disabled {
+    background: #e0e0e0;
     cursor: not-allowed;
-  }
+    box-shadow: none;
+}
+
+.chat-input button i {
+    font-size: 1.1rem;
+}
