@@ -42,10 +42,69 @@
     line-height: 1.5;
 }
 
-.message-content p {
-    margin: 0;
+.message-paragraph {
+    margin: 0 0 0.75rem 0;
     line-height: 1.5;
     font-size: 0.95rem;
+}
+
+.message-paragraph:last-child {
+    margin-bottom: 0;
+}
+
+/* Bullet list styling */
+.bullet-list {
+    margin: 0.5rem 0 0.75rem 1.5rem;
+    padding: 0;
+    list-style-type: none;
+}
+
+.bullet-point {
+    position: relative;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.bullet-point:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: inherit;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.bullet-point:last-child {
+    margin-bottom: 0;
+}
+
+.user-message .bullet-point:before {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.bot-message .bullet-point:before {
+    color: #4a90e2;
+}
+
+/* Bold text styling */
+.message-content strong {
+    font-weight: 600;
+    color: inherit;
+}
+
+.user-message .message-content strong {
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.bot-message .message-content strong {
+    color: #2c3e50;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .message-footer {

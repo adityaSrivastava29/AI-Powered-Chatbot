@@ -19,24 +19,74 @@ const Message = ({ message, isBot }) => {
   };
 
   const formatMessage = (text) => {
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const parts = text.split(urlRegex);
+    const paragraphs = text.split('\n\n');
     
-    return parts.map((part, index) => {
-      if (part.match(urlRegex)) {
+    return paragraphs.map((paragraph, pIndex) => {
+      if (paragraph.trim().startsWith('*')) {
+        const bulletPoints = paragraph.split('\n').map((point, bIndex) => {
+          const content = point.replace(/^\*\s*/, '').trim();
+          
+          const formattedContent = formatTextContent(content);
+          
+          return (
+            <li key={`${pIndex}-${bIndex}`} className="bullet-point">
+              {formattedContent}
+            </li>
+          );
+        });
+        
         return (
-          <a 
-            key={index} 
-            href={part} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="message-link"
-          >
-            {part}
-          </a>
+          <ul key={pIndex} className="bullet-list">
+            {bulletPoints}
+          </ul>
         );
       }
-      return <span key={index}>{part}</span>;
+      
+      return (
+        <p key={pIndex} className="message-paragraph">
+          {formatTextContent(paragraph)}
+        </p>
+      );
+    });
+  };
+
+  const formatTextContent = (text) => {
+    const boldRegex = /\*\*([^*]+)\*\*/g;
+    const parts = text.split(boldRegex);
+    
+    return parts.map((part, index) => {
+      if (index % 2 === 1) {
+        return <strong key={`bold-${index}`}>{part}</strong>;
+      }
+      
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const urlParts = part.split(urlRegex);
+      
+      return urlParts.map((urlPart, urlIndex) => {
+        if (urlPart.match(urlRegex)) {
+          return (
+            <a 
+              key={`url-${index}-${urlIndex}`} 
+              href={urlPart} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="message-link"
+            >
+              {urlPart}
+            </a>
+          );
+        }
+        
+        const stringRegex = /"([^"]*)"/g;
+        const stringParts = urlPart.split(stringRegex);
+        
+        return stringParts.map((stringPart, stringIndex) => {
+          if (stringIndex % 2 === 1) {
+            return <strong key={`string-${index}-${urlIndex}-${stringIndex}`}>{stringPart}</strong>;
+          }
+          return <span key={`string-${index}-${urlIndex}-${stringIndex}`}>{stringPart}</span>;
+        });
+      });
     });
   };
 
@@ -56,7 +106,7 @@ const Message = ({ message, isBot }) => {
   return (
     <div className={`message ${isBot ? 'bot-message' : 'user-message'}`}>
       <div className="message-content">
-        <p>{formatMessage(message.content)}</p>
+        {formatMessage(message.content)}
       </div>
       <div className="message-footer">
         <div className="message-timestamp">
